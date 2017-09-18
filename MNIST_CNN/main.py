@@ -30,7 +30,7 @@ W_conv1 = weight_varible([5, 5, 1, 32], "W_conv1")
 b_conv1 = bias_variable([32], "b_conv1")
 
 # conv layer-1
-x = tf.placeholder(tf.float32, [None, 784])
+x = tf.placeholder(tf.float32, [None, 784], name="x")
 x_image = tf.reshape(x, [-1, 28, 28, 1])
 
 h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)
@@ -51,15 +51,15 @@ h_pool2_flat = tf.reshape(h_pool2, [-1, 7 * 7 * 64])
 h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
 
 # dropout
-keep_prob = tf.placeholder(tf.float32)
+keep_prob = tf.placeholder(tf.float32, name="keep_prob")
 h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
 
 # output layer: softmax
 W_fc2 = weight_varible([1024, 10], "W_fc2")
 b_fc2 = bias_variable([10], "b_fc2")
 
-y_conv = tf.nn.softmax(tf.matmul(h_fc1_drop, W_fc2) + b_fc2)
-y_ = tf.placeholder(tf.float32, [None, 10])
+y_conv = tf.nn.softmax(tf.matmul(h_fc1_drop, W_fc2) + b_fc2, name="y_conv")
+y_ = tf.placeholder(tf.float32, [None, 10], name="y_")
 
 # model training
 cross_entropy = -tf.reduce_sum(y_ * tf.log(y_conv))
@@ -80,7 +80,7 @@ with tf.Session() as sess:
     sess.run(init_op)
 
     # Do some work with the model.
-    for i in range(50):
+    for i in range(200):
         batch = mnist.train.next_batch(50)
         if i % 100 == 0:
             train_accuacy = accuracy.eval(feed_dict={x: batch[0], y_: batch[1], keep_prob: 1.0})
