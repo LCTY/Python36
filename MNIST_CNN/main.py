@@ -13,12 +13,12 @@ def bias_variable(shape, var_name):
     return tf.Variable(initial, name=var_name)
 
 
-def conv2d(x, W):
-    return tf.nn.conv2d(x, W, strides=[1, 1, 1, 1], padding='SAME')
+def conv2d(x, W, conv2d_name=None):
+    return tf.nn.conv2d(x, W, strides=[1, 1, 1, 1], padding='SAME', name=conv2d_name)
 
 
-def max_pool_2x2(x):
-    return tf.nn.max_pool(x, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
+def max_pool_2x2(x, max_pool_name=None):
+    return tf.nn.max_pool(x, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME', name=max_pool_name)
 
 
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
@@ -33,26 +33,26 @@ b_conv1 = bias_variable([32], "b_conv1")
 x = tf.placeholder(tf.float32, [None, 784], name="x")
 x_image = tf.reshape(x, [-1, 28, 28, 1])
 
-h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)
-h_pool1 = max_pool_2x2(h_conv1)
+h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1, 'conv2d1') + b_conv1, name="h_conv1")
+h_pool1 = max_pool_2x2(h_conv1, 'max_pool1')
 
 # conv layer-2
 W_conv2 = weight_varible([5, 5, 32, 64], "W_conv2")
 b_conv2 = bias_variable([64], "b_conv2")
 
-h_conv2 = tf.nn.relu(conv2d(h_pool1, W_conv2) + b_conv2)
-h_pool2 = max_pool_2x2(h_conv2)
+h_conv2 = tf.nn.relu(conv2d(h_pool1, W_conv2, 'conv2d2') + b_conv2, name="h_conv2")
+h_pool2 = max_pool_2x2(h_conv2, 'max_pool2')
 
 # full connection
 W_fc1 = weight_varible([7 * 7 * 64, 1024], "W_fc1")
 b_fc1 = bias_variable([1024], "b_fc1")
 
 h_pool2_flat = tf.reshape(h_pool2, [-1, 7 * 7 * 64])
-h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
+h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1, name="h_fc1")
 
 # dropout
 keep_prob = tf.placeholder(tf.float32, name="keep_prob")
-h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
+h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob, name="h_fc1_drop")
 
 # output layer: softmax
 W_fc2 = weight_varible([1024, 10], "W_fc2")
