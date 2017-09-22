@@ -81,18 +81,18 @@ with tf.Session() as sess:
 
     # Do some work with the model.
     end = 0
-    for i in range(20):
+    for i in range(2000):
         batch = mnist.train.next_batch(10)
-        if i % 30 == 0:
-            train_accuacy = accuracy.eval(feed_dict={x: batch[0], y_: batch[1], keep_prob: 1.0})
+        if i % 200 == 0:
+            train_accuacy = accuracy.eval(feed_dict={x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0})
             print("step %d, training accuracy %.16g" % (i, train_accuacy))
             # stop if accuracy high enough
-            if train_accuacy >= 0.999:
-                end += 1
-                if end >= 5:
-                    break
-            else:
-                end = 0
+            # if train_accuacy >= 0.999:
+            #     end += 1
+            #     if end >= 5:
+            #         break
+            # else:
+            #     end = 0
         train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
 
     print('test accuracy %g' % accuracy.eval(feed_dict={x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0}))
