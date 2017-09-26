@@ -81,7 +81,7 @@ with tf.Session() as sess:
 
     # Do some work with the model.
     end = 0
-    for i in range(2000):
+    for i in range(20000):
         batch = mnist.train.next_batch(10)
         if i % 200 == 0:
             train_accuacy = accuracy.eval(feed_dict={x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0})
@@ -98,6 +98,6 @@ with tf.Session() as sess:
     print('test accuracy %g' % accuracy.eval(feed_dict={x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0}))
 
     # Save the variables to disk.
-    save_path = os.getcwd() + "/tmp/model.ckpt"
+    save_path = "/tmp/model.ckpt"
     saver.save(sess, save_path)
     print("Model saved in file: %s" % save_path)

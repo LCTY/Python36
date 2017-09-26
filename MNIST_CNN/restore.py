@@ -8,7 +8,7 @@ mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
 tf.reset_default_graph()
 with tf.Session() as sess:
-    save_path = os.getcwd() + "/tmp"
+    save_path = "./tmp"
     saver = tf.train.import_meta_graph(save_path + '/model.ckpt.meta')
     saver.restore(sess, tf.train.latest_checkpoint(save_path))
 
@@ -25,35 +25,35 @@ with tf.Session() as sess:
     # print(train_accuacy)
 
 
-    # # 用於將weight輸出成excel資料
-    # wb = Workbook()
-    # ws = wb.active
-    #
-    # all_vars = tf.trainable_variables()
-    # for idx, val in enumerate(all_vars):
-    #     if idx == 1:
-    #         break
-    #
-    #     ws.cell(row=1, column=idx+1, value=val.name)
-    #
-    #     sv = tf.reshape(val, [-1])
-    #     weight = sess.run(sv)
-    #
-    #     for index, value in enumerate(weight):
-    #         ws.cell(row=index+2, column=idx+1, value=value)
-    #
-    # wb.save("sample.xlsx")
+    # 用於將weight輸出成excel資料
+    wb = Workbook()
+    ws = wb.active
+
+    all_vars = tf.trainable_variables()
+    for idx, val in enumerate(all_vars):
+        if idx == 1:
+            break
+
+        ws.cell(row=1, column=idx+1, value=val.name)
+
+        sv = tf.reshape(val, [-1])
+        weight = sess.run(sv)
+
+        for index, value in enumerate(weight):
+            ws.cell(row=index+2, column=idx+1, value=value)
+
+    wb.save("sample.xlsx")
 
 
-    # # 用於印出直方圖
-    # all_vars = tf.trainable_variables()
-    # for idx, val in enumerate(all_vars):
-    #     if idx == 1:
-    #         break
-    #
-    #     sv = tf.reshape(val, [-1])
-    #     weight = sess.run(sv)
-    #     plt.hist(weight, 2048)
-    #     save_path = str(idx) + ".png"
-    #     plt.savefig(save_path)
-    #     plt.close()
+    # 用於印出直方圖
+    all_vars = tf.trainable_variables()
+    for idx, val in enumerate(all_vars):
+        if idx == 1:
+            break
+
+        sv = tf.reshape(val, [-1])
+        weight = sess.run(sv)
+        plt.hist(weight, 2048)
+        save_path = str(idx) + ".png"
+        plt.savefig(save_path)
+        plt.close()
