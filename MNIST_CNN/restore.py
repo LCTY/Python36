@@ -1,4 +1,6 @@
 import os
+import math
+import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
 from openpyxl import Workbook
@@ -48,12 +50,16 @@ with tf.Session() as sess:
     # # 用於印出直方圖
     # all_vars = tf.trainable_variables()
     # for idx, val in enumerate(all_vars):
-    #     if idx == 1:
-    #         break
+    #     # if idx == 1:
+    #     #     break
     #
     #     sv = tf.reshape(val, [-1])
     #     weight = sess.run(sv)
-    #     plt.hist(weight, 2048)
-    #     save_path = str(idx) + ".png"
+    #     for index, value in enumerate(weight):
+    #         weight[index] = math.log(abs(value), 2)
+    #
+    #     plt.title(val.name)
+    #     plt.hist(weight, bins=range(-12, 0, 1))
+    #     save_path = 'hist/' + str(idx) + ".png"
     #     plt.savefig(save_path)
     #     plt.close()
