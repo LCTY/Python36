@@ -99,5 +99,7 @@ with tf.Session() as sess:
 
     # Save the variables to disk.
     save_path = "/tmp/model.ckpt"
+    if not os.path.exists("/tmp/"):
+        os.makedirs(save_path)
     saver.save(sess, save_path)
     print("Model saved in file: %s" % save_path)
