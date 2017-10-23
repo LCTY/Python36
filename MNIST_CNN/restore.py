@@ -10,8 +10,8 @@ mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
 tf.reset_default_graph()
 with tf.Session() as sess:
-    save_path = "/tmp"
-    saver = tf.train.import_meta_graph(save_path + '/model.ckpt.meta')
+    save_path = "./tmp/"
+    saver = tf.train.import_meta_graph(save_path + 'model.ckpt.meta')
     saver.restore(sess, tf.train.latest_checkpoint(save_path))
 
 
@@ -31,7 +31,7 @@ with tf.Session() as sess:
     # x = tf.get_default_graph().get_tensor_by_name('x:0')
     # y_ = tf.get_default_graph().get_tensor_by_name('y_:0')
     # keep_prob = tf.get_default_graph().get_tensor_by_name('keep_prob:0')
-    # all_vars = tf.trainable_variables()
+    all_vars = tf.trainable_variables()
     # # pooling layer, last layer not in tf.trainable_variables()
     # y_conv = tf.get_default_graph().get_tensor_by_name('y_conv:0')
     # all_vars.append(y_conv)

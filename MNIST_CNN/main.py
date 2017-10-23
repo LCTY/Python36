@@ -98,8 +98,9 @@ with tf.Session() as sess:
     print('test accuracy %g' % accuracy.eval(feed_dict={x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0}))
 
     # Save the variables to disk.
-    save_path = "/tmp/model.ckpt"
-    if not os.path.exists("/tmp/"):
+    save_path = "tmp/"
+    if not os.path.exists("tmp/"):
         os.makedirs(save_path)
-    saver.save(sess, save_path)
-    print("Model saved in file: %s" % save_path)
+    saver.save(sess, save_path+"model.ckpt")
+    tf.train.write_graph(sess.graph_def, save_path,"model_age.pb", as_text=True)
+    print("Model saved in file: %s" % save_path+"model.ckpt")
