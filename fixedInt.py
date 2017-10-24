@@ -375,6 +375,16 @@ class DeFixedInt(object):
         return retValue
 
     def __lt__(self, other):
+        if isinstance(other, float):
+            if other > (self.value >> self.fractWidth):
+                return True
+            else:
+                return False
+        elif isinstance(other, int):
+            if other > (self.value >> self.fractWidth):
+                return True
+            else:
+                return False
         temp = copy.copy(other)
         temp.newRep(self.intWidth, self.fractWidth)
         if temp.value > self.value:
@@ -389,6 +399,11 @@ class DeFixedInt(object):
             return False
 
     def __eq__(self, other):
+        if isinstance(other, float) or isinstance(other, int):
+            if other == (self.value >> self.fractWidth):
+                return True
+            else:
+                return False
         temp = copy.copy(other)
         temp.newRep(self.intWidth, self.fractWidth)
         if temp.value == self.value:
@@ -397,6 +412,11 @@ class DeFixedInt(object):
             return False
 
     def __ne__(self, other):
+        if isinstance(other, float) or isinstance(other, int):
+            if other == (self.value >> self.fractWidth):
+                return True
+            else:
+                return False
         temp = copy.copy(other)
         temp.newRep(self.intWidth, self.fractWidth)
         if temp.value != self.value:
@@ -405,6 +425,16 @@ class DeFixedInt(object):
             return False
 
     def __gt__(self, other):
+        if isinstance(other, float):
+            if other < (self.value >> self.fractWidth):
+                return True
+            else:
+                return False
+        elif isinstance(other, int):
+            if other < (self.value >> self.fractWidth):
+                return True
+            else:
+                return False
         temp = copy.copy(other)
         temp.newRep(self.intWidth, self.fractWidth)
         if temp.value < self.value:
@@ -540,6 +570,7 @@ if __name__ == '__main__':
     print("printing a: ", a)
 
     a = DeFixedInt(8, 3, 1.2)
+    print(a >= 1.24)
     print("Showing range: ")
     a.showRange()
     print("printig a: ", a)
