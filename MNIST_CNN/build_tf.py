@@ -174,20 +174,21 @@ with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
 
     batch_size = 64
-    train_iter = 10
+    train_iter = 2000
+    one_tenth = int(train_iter * 0.1)
 
     # Train the model.
     end = 0
     for i in range(train_iter):
         batch = mnist.train.next_batch(batch_size)
-        idx_start, idx_end = i * batch_size, (i+1)*batch_size
-        if i % int((train_iter * 0.1)) == 0:
+        if i % one_tenth == 0:
+            idx_start, idx_end = (i % one_tenth) * batch_size, ((i % one_tenth) + 1) * batch_size
             train_accuracy = accuracy.eval(feed_dict={
                 x: mnist.test.images[idx_start:idx_end],
                 y_: mnist.test.labels[idx_start:idx_end],
                 keep_prob: 1.0
             })
-            print("step %d, training accuracy %.8g" % (i, train_accuracy))
+            print("step %d, training accuracy %g" % (i, train_accuracy))
             """ 
             # stop if accuracy high enough
             if train_accuracy >= 0.999:
