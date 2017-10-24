@@ -8,7 +8,7 @@ from openpyxl import Workbook
 from tensorflow.examples.tutorials.mnist import input_data
 
 # Select model.
-model_name = "model_1"
+model_name = "model_2"
 print("Model name: %s" % model_name)
 
 # Read MNIST database.
@@ -183,5 +183,5 @@ def function_5():
 # function_1()
 # function_2()
 # function_3()
-# function_4()
+function_4()
 # function_5()
