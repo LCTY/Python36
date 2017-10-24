@@ -68,9 +68,9 @@ class DeFixedInt(object):
     def __init__(self, intWidth=0, fractWidth=15, value=0, roundMode='round_even'):
         # Test for proper parameter
         # Setting the value will be tested through the property function
-        if (intWidth < 0):
+        if intWidth < 0:
             raise ValueError("Integer width needs to be >= 0!")
-        if (fractWidth < 0):
+        if fractWidth < 0:
             raise ValueError("Fractional width needs to be >= 0!")
 
         if ((roundMode != 'trunc') and
@@ -91,11 +91,11 @@ class DeFixedInt(object):
         return self.__value
 
     def _setValue(self, value):
-        if (isinstance(value, float)):
+        if isinstance(value, float):
             # print "float value"
             self._fromFloat(value)
 
-        elif (isinstance(value, int)):
+        elif isinstance(value, int):
             # print "int value"
             self.__value = value
         else:
@@ -139,52 +139,52 @@ class DeFixedInt(object):
         return retValue
 
     def __getitem__(self, key):
-        if (isinstance(key, int)):
+        if isinstance(key, int):
             i = key
-            if (i >= self.width or i < (-self.width)):
+            if i >= self.width or i < (-self.width):
                 raise IndexError("list index %d out of range %d ... %d" % \
                                  (i, -self.width, (self.width - 1)))
 
-            if (i < 0):
+            if i < 0:
                 shift = self.width + i
             else:
                 shift = i
 
-            return ((self.value >> shift) & 0x1)
+            return (self.value >> shift) & 0x1
 
-        elif (isinstance(key, slice)):
+        elif isinstance(key, slice):
             msb, lsb = key.start, key.stop
 
             # first determine the new value
-            if (lsb == None):
+            if lsb == None:
                 lsb = 0
-            if (lsb < 0):
+            if lsb < 0:
                 raise ValueError("DeFixedInt[msb:lsb] requires lsb >= 0\n" \
                                  "            lsb == %d" % lsb)
-            if (msb == None or msb == self.width):
-                if (msb == None):
+            if msb == None or msb == self.width:
+                if msb == None:
                     msb = self.width
                 newValue = (self.value >> lsb)
             else:
                 newValue = None
 
-            if (msb <= lsb):
+            if msb <= lsb:
                 raise ValueError("DeFixedInt[msb:lsb] requires msb > lsb\n" \
                                  "            [msb:lsb] == [%d:%d]" % (msb, lsb))
 
-            if (msb > self.width):
+            if msb > self.width:
                 raise ValueError("DeFixedInt[msb:lsb] requires msb <= %d\n" \
                                  "            msb == %d" % (self.width, msb))
 
-            if (not newValue):
+            if not newValue:
                 newValue = (self.value & (1 << msb) - 1) >> lsb
 
             # then the new intWidth and fractWidth
-            if (lsb < self.fractWidth):
-                if (msb > self.fractWidth):
+            if lsb < self.fractWidth:
+                if msb > self.fractWidth:
                     newFractWidth = self.fractWidth - lsb
 
-                    if (msb > self.intWidth + self.fractWidth):
+                    if msb > self.intWidth + self.fractWidth:
                         newIntWidth = self.intWidth
                     else:
                         newIntWidth = msb - self.fractWidth
@@ -196,7 +196,7 @@ class DeFixedInt(object):
             else:
                 newFractWidth = 0
 
-                if (msb > (self.intWidth + self.fractWidth)):
+                if msb > (self.intWidth + self.fractWidth):
                     newIntWidth = msb - lsb - 1
                 else:
                     newIntWidth = msb - lsb
@@ -210,14 +210,14 @@ class DeFixedInt(object):
             raise TypeError("DeFixedInt item/slice index must be integer")
 
     def __repr__(self):
-        str = "<%d" % (self.__value)
+        str = "<%d" % self.__value
         # str += " (%.3f)" % (self.fValue)
         str += " A(%d,%d)>" % (self.__intWidth, self.__fractWidth)
         return str
 
     def __str__(self):
-        str = "<%d" % (self.__value)
-        str += " (%.3f)" % (self.fValue)
+        str = "<%d" % self.__value
+        str += " (%.3f)" % self.fValue
         str += " A(%d,%d)>" % (self.__intWidth, self.__fractWidth)
         return str
 
@@ -230,7 +230,7 @@ class DeFixedInt(object):
     def __mul__(self, other):
         retValue = DeFixedInt()
 
-        if (isinstance(other, DeFixedInt)):
+        if isinstance(other, DeFixedInt):
 
             # print "__mult__: other is DeFixedInt"
             retValue.__intWidth = self.__intWidth + other.__intWidth + 1
@@ -239,7 +239,7 @@ class DeFixedInt(object):
 
             retValue.value = self.value * other.value
 
-        elif (isinstance(other, (int, float))):
+        elif isinstance(other, (int, float)):
 
             # print "__mult__: other is '%s' "% type(other)
             b = DeFixedInt(self.__intWidth, self.__fractWidth, other, self.__roundMode)
@@ -313,11 +313,11 @@ class DeFixedInt(object):
     def __lshift__(self, other):
 
         # check for the other value, only support 'int' type
-        if (not isinstance(other, int)):
+        if not isinstance(other, int):
             msg = "unsupported operand type(s) for <<: 'DeFixedInt' and '%s'" % type(other)
             raise TypeError(msg)
 
-        if (other < 0):
+        if other < 0:
             raise ValueError("negative shift count")
 
         retValue = DeFixedInt()
@@ -333,11 +333,11 @@ class DeFixedInt(object):
         return retValue
 
     def __rshift__(self, other):
-        if (not isinstance(other, int)):
+        if not isinstance(other, int):
             msg = "unsupported operand type(s) for <<: 'DeFixedInt' and '%s'" % type(other)
             raise TypeError(msg)
 
-        if (other < 0):
+        if other < 0:
             raise ValueError("negative shift count")
 
         retValue = DeFixedInt()
@@ -348,18 +348,18 @@ class DeFixedInt(object):
         retValue.__fractWidth = self.fractWidth
         retValue.__roundMode = self.__roundMode
 
-        if (other > 0):
-            if (self.__roundMode == 'round'):
+        if other > 0:
+            if self.__roundMode == 'round':
                 roundBit = self[other - 1]  # take the msb that would get lost
                 retValue.value = (self.value >> other) + roundBit  # and add it
 
-            elif (self.__roundMode == 'round_even'):
+            elif self.__roundMode == 'round_even':
                 newBitZero = self[other]
                 msbTrunc = self[other - 1]
                 remainTrunc = self[other - 1:0]
 
                 # TODO: should the 'not' work just for DeFixedInt?
-                if (msbTrunc and not remainTrunc.value):  # truncing 100..-> round even
+                if msbTrunc and not remainTrunc.value:  # truncing 100..-> round even
                     retValue.value = (self.value >> other) + \
                                      (newBitZero & msbTrunc)
 
@@ -374,6 +374,50 @@ class DeFixedInt(object):
 
         return retValue
 
+    def __lt__(self, other):
+        temp = copy.copy(other)
+        temp.newRep(self.intWidth, self.fractWidth)
+        if temp.value > self.value:
+            return True
+        else:
+            return False
+
+    def __le__(self, other):
+        if self < other or self == other:
+            return True
+        else:
+            return False
+
+    def __eq__(self, other):
+        temp = copy.copy(other)
+        temp.newRep(self.intWidth, self.fractWidth)
+        if temp.value == self.value:
+            return True
+        else:
+            return False
+
+    def __ne__(self, other):
+        temp = copy.copy(other)
+        temp.newRep(self.intWidth, self.fractWidth)
+        if temp.value != self.value:
+            return True
+        else:
+            return False
+
+    def __gt__(self, other):
+        temp = copy.copy(other)
+        temp.newRep(self.intWidth, self.fractWidth)
+        if temp.value < self.value:
+            return True
+        else:
+            return False
+
+    def __ge__(self, other):
+        if self > other or self == other:
+            return True
+        else:
+            return False
+
     ######################################################################
     # private methods
     ######################################################################
@@ -382,13 +426,13 @@ class DeFixedInt(object):
         self.__value = self.round(value * 2.0 ** self.__fractWidth)
 
     def _toFloat(self):
-        return (self.__value / (2.0 ** self.__fractWidth))
+        return self.__value / (2.0 ** self.__fractWidth)
 
     def _overflowCheck(self):
         maxNum = 2 ** (self.width - 1) - 1
         minNum = - 2 ** (self.width - 1)
 
-        if (self.value > maxNum or self.value < minNum):
+        if self.value > maxNum or self.value < minNum:
             msg = "Value: %d exeeds allowed range %d ... %d" % \
                   (self.value, minNum, maxNum)
             raise DeFixedIntOverflowError(msg)
@@ -403,31 +447,31 @@ class DeFixedInt(object):
 
         retValue = False
 
-        if (self.value > maxNum or self.value < minNum):
+        if self.value > maxNum or self.value < minNum:
             retValue = True
 
         return retValue
 
     def newRep(self, intWidth, fractWidth):
         # first adjust the fractional width
-        if (fractWidth > self.fractWidth):
+        if fractWidth > self.fractWidth:
             n = fractWidth - self.fractWidth
             # need to grow first to avoid overflow
             self.__fractWidth = fractWidth
             self.value = self.value << n
-        elif (fractWidth < self.fractWidth):
+        elif fractWidth < self.fractWidth:
             # here we might loose precision
             n = self.fractWidth - fractWidth
             self.value = self.value >> n
             self.__fractWidth = fractWidth
 
         # next adjust the integer width
-        if (intWidth > self.intWidth):
+        if intWidth > self.intWidth:
             self.__intWidth = intWidth
-        elif (intWidth < self.intWidth):
+        elif intWidth < self.intWidth:
 
             # in case of a smaller intWidth we need to check for possible overflow
-            if (self.isOverflowing(intWidth, self.fractWidth)):
+            if self.isOverflowing(intWidth, self.fractWidth):
                 msg = "New intWidth: %d will overflow current value: %d" % \
                       (intWidth, self.value)
                 raise DeFixedIntOverflowError(msg)
@@ -435,29 +479,29 @@ class DeFixedInt(object):
             self.__intWidth = intWidth
 
     def round(self, value):
-        if (self.__roundMode == 'trunc'):
+        if self.__roundMode == 'trunc':
             retVal = int(value)
 
-        elif (self.__roundMode == 'round_even'):
+        elif self.__roundMode == 'round_even':
             # if value is .50 round to even, if not, round normal
             fract, integer = math.modf(value)
             absIValue = int(abs(integer))
-            if (int(integer) < 0):
+            if int(integer) < 0:
                 sign = -1
             else:
                 sign = 1
 
             # TODO: look for a better way to compare here for 0.500
             # floating point compare does not seem to be so good
-            if ((abs(fract) - 0.5) == 0.0):
-                if ((absIValue % 2) == 0):  # even
+            if (abs(fract) - 0.5) == 0.0:
+                if (absIValue % 2) == 0:  # even
                     retVal = absIValue * sign
                 else:  # odd
                     retVal = (absIValue + 1) * sign
             else:
                 retVal = round(value)
 
-        elif (self.__roundMode == 'round'):
+        elif self.__roundMode == 'round':
             retVal = round(value)
 
         else:
@@ -505,10 +549,8 @@ if __name__ == '__main__':
 
     b = DeFixedInt(8, 0)
     print("Representation b: ", b.rep)
-
     c = a + b
     print("Representation c: ", c.rep)
-
     a = 1.25
     b = 2.0
     c = a + b
